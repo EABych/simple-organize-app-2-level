@@ -1,1 +1,30 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap');
+
+.root {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 300px;
+  font-family: 'Roboto', sans-serif;
+  grid-gap: 2vw;
+  margin: 0;
+  padding: 30px;
+
+  ::before{
+    display: none;
+  }
+
+  ::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  ::-webkit-scrollbar-track {
+    border-radius: 10px;
+    border: 1px solid grey;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    border: 1px solid grey;
+  }
+}

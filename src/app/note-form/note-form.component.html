@@ -1,0 +1,31 @@
+<div class="container">
+  <p class="title">NOTES</p>
+  Organizer: <b>{{dateService.activeDate.value.format('Do MMMM YYYY')}}</b>
+  <hr>
+  <form [formGroup]="checkoutForm" (ngSubmit)="addNewNote()">
+      Create new note
+      <input
+        id="text"
+        type="text"
+        formControlName="text"
+        placeholder="Add text"
+      >
+    <button type="submit">Add note</button>
+  </form>
+  <ul class="form"
+      *ngIf="notesListService.notesList[dateService.activeDate.value.format('YYYYMMDD')] &&
+    notesListService.notesList[dateService.activeDate.value.format('YYYYMMDD')].length">
+    <li
+      *ngFor="let note of notesListService.notesList[dateService.activeDate.value.format('YYYYMMDD')]; index as i"
+    >
+      {{i + 1}}. {{note}}
+      <button class="deleteButton" (click)="deleteNote(i)">x</button>
+    </li>
+  </ul>
+  <p
+    class="form"
+    *ngIf="!notesListService.notesList[dateService.activeDate.value.format('YYYYMMDD')] ||
+   !notesListService.notesList[dateService.activeDate.value.format('YYYYMMDD')].length">
+    There is no one note yet
+  </p>
+</div>
