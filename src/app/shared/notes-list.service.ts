@@ -1,26 +1,73 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {ApiEndpointsService} from './api-endpoints.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotesListService {
 
-  constructor() { }
+  constructor(
+    private http: HttpClient,
+    private API: ApiEndpointsService,
+  ) {
+  }
 
-  public notesList = {
-    20200915: ['test'],
-    20200901: ['test'],
-    20200926: ['test', 'test2'],
-  };
+  public tasksList = {};
+  public loading = true;
+  public objectKeys = Object.keys;
 
   addNote(text: string, date: string): void {
-    if (this.notesList[date]){
-      this.notesList[date].push(text);
-    }else {
-      this.notesList[date] = [text];
-    }
+    this.API.startFetching();
+
+    this.API.addNewTaskForCurrentDate(text, date).subscribe(
+      res => {
+        const currentDate = this.tasksList[date];
+        if (currentDate) {
+          currentDate[res.name] = {text};
+        } else {
+          this.tasksList[date] = {[res.name]: {text}};
+        }
+        this.API.finishFetching();
+
+      },
+      error => {
+        console.log(error);
+        this.API.finishFetching();
+      }
+    );
   }
-  deleteNote(index: number, date: string): void {
-    this.notesList[date] = this.notesList[date].filter((note, i) => i !== index);
+
+  getNotes(): void {
+    this.API.startFetching(true);
+
+    this.API.getAllNotesForAllDates().subscribe(
+      res => {
+        this.API.finishFetching(true);
+        this.tasksList = res;
+      },
+      error => {
+        console.log(error);
+        this.API.finishFetching(true);
+      }
+    );
+  }
+
+
+  deleteNote(id: string, date: string): void {
+    this.API.startFetching();
+
+    this.API.deleteTaskFromIdForCurrentDate(date, id).subscribe(
+      () => {
+        delete this.tasksList[date][id];
+        this.API.finishFetching();
+      },
+      error => {
+        console.log(error);
+        this.API.finishFetching();
+      }
+    );
   }
 }

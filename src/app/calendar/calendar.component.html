@@ -11,24 +11,21 @@
     *ngFor="let day of dateService.month; index as i"
     class="day"
     [class.activeDay]="
-   dateService.activeDate.value.format('YYYYMMDD') ===
-   dateService.date.value.format('YYYYMM') + (day > 9 ? day : ('0' + day))"
-    [class.currentDay]="dateService.currentDate.value.format('YYYYMMDD') ===
-   dateService.date.value.format('YYYYMM') + (day > 9 ? day : ('0' + day))"
-
+   (dateService.activeDate.value | moment: 'YYYYMMDD') === (day | dayToDbFormat)"
+    [class.currentDay]="(dateService.currentDate.value | moment: 'YYYYMMDD') ===
+   (day | dayToDbFormat)"
     (click)="changeActiveDay(day)"
   >
     <div
       class="date"
       *ngIf="!!day"
       [class.weekend]="(i % 7 === 0) || ((i+1) % 7 === 0)"
-
     >
       <div
-        *ngIf="!!notesListService.notesList[dateService.date.value.format('YYYYMM') + (day > 9 ? day : ('0' + day))] &&
-      notesListService.notesList[dateService.date.value.format('YYYYMM') + (day > 9 ? day : ('0' + day))].length"
-        [class.hasNote]="!!notesListService.notesList[dateService.date.value.format('YYYYMM') + (day > 9 ? day : ('0' + day))]">
-        {{notesListService.notesList[dateService.date.value.format('YYYYMM') + (day > 9 ? day : ('0' + day))].length}}
+        *ngIf="!API.initialIsFetching && ((day | dayToDbFormat) | countNumberOfTasks)"
+        [class.hasNote]="!!((day | dayToDbFormat) | countNumberOfTasks)"
+      >
+        {{((day | dayToDbFormat) | countNumberOfTasks)}}
       </div>
       {{day}}
     </div>

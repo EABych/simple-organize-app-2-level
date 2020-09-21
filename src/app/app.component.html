@@ -1,2 +1,4 @@
-<app-calendar></app-calendar>
-<app-note-form></app-note-form>
+<app-start-page *ngIf="API.initialIsFetching"></app-start-page>
+
+<app-calendar *ngIf="!API.initialIsFetching"></app-calendar>
+<app-note-form *ngIf="!API.initialIsFetching"></app-note-form>

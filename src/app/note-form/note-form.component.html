@@ -12,20 +12,24 @@
       >
     <button type="submit">Add note</button>
   </form>
+  <mat-progress-bar *ngIf="API.isFetching" class="loadingBar" mode="buffer"></mat-progress-bar>
+
+  <div *ngIf="API.initialIsFetching">loading...</div>
+
   <ul class="form"
-      *ngIf="notesListService.notesList[dateService.activeDate.value.format('YYYYMMDD')] &&
-    notesListService.notesList[dateService.activeDate.value.format('YYYYMMDD')].length">
+      *ngIf="!API.initialIsFetching && notesListService.tasksList[(dateService.activeDate.value | moment: 'YYYYMMDD')] &&
+      ((dateService.activeDate.value | moment: 'YYYYMMDD') | countNumberOfTasks)">
     <li
-      *ngFor="let note of notesListService.notesList[dateService.activeDate.value.format('YYYYMMDD')]; index as i"
+      *ngFor="let note of (notesListService.tasksList[(dateService.activeDate.value | moment: 'YYYYMMDD')] | keyvalue); index as i"
     >
-      {{i + 1}}. {{note}}
-      <button class="deleteButton" (click)="deleteNote(i)">x</button>
+      {{i + 1}}. {{note.value.text}}
+      <button class="deleteButton" (click)="deleteNote(note.key)">x</button>
     </li>
   </ul>
   <p
     class="form"
-    *ngIf="!notesListService.notesList[dateService.activeDate.value.format('YYYYMMDD')] ||
-   !notesListService.notesList[dateService.activeDate.value.format('YYYYMMDD')].length">
+    *ngIf="!API.initialIsFetching && !notesListService.tasksList[(dateService.activeDate.value | moment: 'YYYYMMDD')] ||
+   !notesListService.objectKeys(notesListService.tasksList[(dateService.activeDate.value | moment: 'YYYYMMDD')]).length">
     There is no one note yet
   </p>
 </div>
