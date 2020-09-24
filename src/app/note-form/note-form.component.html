@@ -17,10 +17,10 @@
   <div *ngIf="API.initialIsFetching">loading...</div>
 
   <ul class="form"
-      *ngIf="!API.initialIsFetching && notesListService.tasksList[(dateService.activeDate.value | moment: 'YYYYMMDD')] &&
+      *ngIf="!API.initialIsFetching && accountService.user.tasksList[(dateService.activeDate.value | moment: 'YYYYMMDD')] &&
       ((dateService.activeDate.value | moment: 'YYYYMMDD') | countNumberOfTasks)">
     <li
-      *ngFor="let note of (notesListService.tasksList[(dateService.activeDate.value | moment: 'YYYYMMDD')] | keyvalue); index as i"
+      *ngFor="let note of (accountService.user.tasksList[(dateService.activeDate.value | moment: 'YYYYMMDD')] | keyvalue); index as i"
     >
       {{i + 1}}. {{note.value.text}}
       <button class="deleteButton" (click)="deleteNote(note.key)">x</button>
@@ -28,8 +28,8 @@
   </ul>
   <p
     class="form"
-    *ngIf="!API.initialIsFetching && !notesListService.tasksList[(dateService.activeDate.value | moment: 'YYYYMMDD')] ||
-   !notesListService.objectKeys(notesListService.tasksList[(dateService.activeDate.value | moment: 'YYYYMMDD')]).length">
+    *ngIf="!API.initialIsFetching && !accountService.user.tasksList[(dateService.activeDate.value | moment: 'YYYYMMDD')] ||
+   !accountService.objectKeys(accountService.user.tasksList[(dateService.activeDate.value | moment: 'YYYYMMDD')]).length">
     There is no one note yet
   </p>
 </div>

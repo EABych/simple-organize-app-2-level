@@ -4,5 +4,5 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class Constants {
-  public readonly URL: string = 'https://ang-simple-organizer.firebaseio.com/tasks';
+  public readonly URL: string = 'https://ang-simple-organizer.firebaseio.com';
 }

@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
-import {DateService} from '../shared/date.service';
-import {NotesListService} from '../shared/notes-list.service';
-import {ApiEndpointsService} from '../shared/api-endpoints.service';
+import {DateService} from '../_services/date.service';
+import {ApiEndpointsService} from '../_services/api-endpoints.service';
+import {AccountService} from '../_services/account.service'
 
 
 @Component({
@@ -13,8 +13,8 @@ export class CalendarComponent {
 
   constructor(
     public dateService: DateService,
-    public notesListService: NotesListService,
     private API: ApiEndpointsService,
+    public accountService: AccountService,
   ) {
   }
 

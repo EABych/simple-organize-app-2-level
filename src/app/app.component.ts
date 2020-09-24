@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {ApiEndpointsService} from './shared/api-endpoints.service';
+import {ApiEndpointsService} from './_services/api-endpoints.service';
+import {AccountService} from './_services/account.service';
 
 @Component({
   selector: 'app-root',
@@ -11,14 +12,11 @@ export class AppComponent{
   constructor(
     public dialog: MatDialog,
     public API: ApiEndpointsService,
+    public accountService: AccountService,  
   ) {}
+  
+  logout(): void {
+    this.accountService.logout()
+  }
 }
 
-
-@Component({
-  selector: 'app-start-page',
-  templateUrl: './app-start-page.html',
-})
-// tslint:disable-next-line:component-class-suffix
-export class StartPage {
-}

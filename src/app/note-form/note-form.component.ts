@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl} from '@angular/forms';
-import {NotesListService} from '../shared/notes-list.service';
-import {DateService} from '../shared/date.service';
-import {ApiEndpointsService} from '../shared/api-endpoints.service';
+import {DateService} from '../_services/date.service';
+import {ApiEndpointsService} from '../_services/api-endpoints.service';
+import {AccountService} from '../_services/account.service'
+
 
 @Component({
   selector: 'app-note-form',
@@ -14,22 +15,21 @@ export class NoteFormComponent {
   checkoutForm;
 
   constructor(
-    public notesListService: NotesListService,
     public dateService: DateService,
     private formBuilder: FormBuilder,
     public API: ApiEndpointsService,
+    public accountService: AccountService,
   ) {
     this.checkoutForm = this.formBuilder.group({
       text: '',
     });
-    this.notesListService.getNotes();
   }
 
   addNewNote(): void {
     if (!this.checkoutForm.value.text){
       return;
     }
-    this.notesListService.addNote(
+    this.accountService.addNote(
       this.checkoutForm.value.text,
       this.dateService.activeDate.value.format('YYYYMMDD')
     );
@@ -38,7 +38,7 @@ export class NoteFormComponent {
 
 
   deleteNote(index: string): void {
-    this.notesListService.deleteNote(
+    this.accountService.deleteNote(
       index,
       this.dateService.activeDate.value.format('YYYYMMDD')
     );

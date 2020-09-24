@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {DateService} from './date.service';
+import {DateService} from '../_services/date.service';
 
 @Pipe({
   name: 'dayToDbFormat'

@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {NotesListService} from './notes-list.service';
+import {AccountService} from '../_services/account.service'
 
 @Pipe({
   name: 'getTasksOfCurrentDay'
@@ -7,12 +7,12 @@ import {NotesListService} from './notes-list.service';
 
 export class GetTasksOfCurrentDayPipe implements PipeTransform {
   constructor(
-    public notesListService: NotesListService,
+    public accountService: AccountService,
   ) {
   }
 
   transform(day: string): string {
-    return this.notesListService.tasksList[day] || {};
+    return this.accountService.user.tasksList[day] || {};
   }
 
 }

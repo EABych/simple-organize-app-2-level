@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {NotesListService} from './notes-list.service';
+import {AccountService} from '../_services/account.service'
 
 @Pipe({
   name: 'countNumberOfTasks',
@@ -8,11 +8,11 @@ import {NotesListService} from './notes-list.service';
 export class CountNumberOfTasksPipe implements PipeTransform {
 
   constructor(
-    public notesListService: NotesListService,
+    public accountService: AccountService,
   ) {
   }
 
   transform(day: string): number {
-    return this.notesListService.objectKeys(this.notesListService.tasksList[day] || {}).length;
+    return this.accountService.objectKeys(this.accountService.user.tasksList[day] || {}).length;
   }
 }

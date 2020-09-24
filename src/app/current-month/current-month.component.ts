@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {DateService} from '../shared/date.service';
+import {DateService} from '../_services/date.service';
 
 @Component({
   selector: 'app-current-month',
