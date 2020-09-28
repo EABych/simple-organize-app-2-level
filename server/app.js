@@ -22,11 +22,11 @@ admin.initializeApp({
 const db = admin.database();
 
 const app = express();
-app.use(express.static('../dist/simple-organize-app'));
+app.use(express.static('./dist/simple-organize-app'));
 
 
 app.get('/*', function (req, res) {
-  res.sendFile('index.html', { root: '../dist/simple-organize-app' }
+  res.sendFile('index.html', { root: './dist/simple-organize-app' }
   );
 });
 
@@ -59,8 +59,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // user
-app.get('/login', cors(), function (req, res) {
-  const {login, password} = url.parse(req.url, true).query
+app.post('/login', cors(), function (req, res) {
+  const {login, password} = req.body;
 
   db.ref(`users/${login}`).once('value')
     .then(resp => {

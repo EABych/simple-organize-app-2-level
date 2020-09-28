@@ -26,7 +26,6 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import { CommonModule } from '@angular/common';
 import {PopupWindowComponent} from './note-form/popup-window.component';
 
-// определение маршрутов
 @NgModule({
   declarations: [
     AppComponent,

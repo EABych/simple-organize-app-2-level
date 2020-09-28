@@ -62,6 +62,6 @@ export class ApiEndpointsService {
 
   public login(login: string, password: string): Observable<any> {
         return this.http
-        .get(`${this.constants.URL}/login?login=${login}&password=${password}`);
+        .post(`${this.constants.URL}/login`, {login, password});
     }
 }
