@@ -10,8 +10,8 @@ const admin = require("firebase-admin");
 const jwt = require('jsonwebtoken');
 
 const accessTokenSecret = 'youraccesstokensecret';
-const serviceAccount = require("./public/serviceAccountKey.json");
-const authenticateJWT = require("./_helpers/authenticateJWT");
+const serviceAccount = require("./server/public/serviceAccountKey.json");
+const authenticateJWT = require("./server/_helpers/authenticateJWT");
 
 
 
@@ -22,41 +22,16 @@ admin.initializeApp({
 
 const db = admin.database();
 
+
 const app = express();
-app.use(express.static('../dist/simple-organize-app'));
+app.use(bodyParser.json())
+
+// Serve only the static files form the dist directory
+app.use(express.static(__dirname + '/dist/simple-organize-app'));
 
 app.get('/*', function(req,res) {
-
-  res.sendFile(path.join('../dist/simple-organize-app/index.html'));
+  res.sendFile(path.join(__dirname+'/dist/simple-organize-app/index.html'));
 });
-
-
-app.use(bodyParser.urlencoded({extended: false}))
-app.use(cors({origin: true}));
-app.use(bodyParser.json())
-app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Origin, Cache-Control");
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  next();
-});
-
-
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({extended: false}));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
-
-
-
 
 // user
 app.post('/login', cors(), function (req, res) {
@@ -189,20 +164,7 @@ app.put('/editTodo', authenticateJWT, (req, res) => {
 
 
 
+// Start the app by listening on the default Heroku port
+app.listen(process.env.PORT || 8080);
 
 
-app.use(function (req, res, next) {
-  next(createError(404));
-});
-
-
-
-app.use(function (err, req, res, next) {
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  res.status(err.status || 500);
-  res.render('error');
-});
-
-module.exports = app;

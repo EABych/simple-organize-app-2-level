@@ -3,9 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start:prod": "node server/app.js",
-    "start": "node server/app.js",
     "build": "ng build",
+    "start": "node server.js",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
