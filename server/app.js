@@ -23,11 +23,12 @@ admin.initializeApp({
 const db = admin.database();
 
 const app = express();
-app.use(express.static('../dist/simple-organize-app'));
+app.use(express.static('./dist/simple-organize-app'));
 
-app.get('/*', function(req,res) {
 
-  res.sendFile(path.join('../dist/simple-organize-app/index.html'));
+app.get('/*', function (req, res) {
+  res.sendFile('index.html', { root: './dist/simple-organize-app' }
+  );
 });
 
 
@@ -84,7 +85,7 @@ app.post('/login', cors(), function (req, res) {
         res.status(500).send('User doesn`t exist!');
       }
     })
-    .catch(err => {
+    .catch(() => {
         res.status(500).send('Something broke!');
       }
     )
@@ -117,7 +118,7 @@ app.post('/registration', cors(), function (req, res) {
               });
             }))
           }))
-          .catch(err => {
+          .catch(() => {
               res.status(500).send('Something broke!');
             }
           )
@@ -139,7 +140,7 @@ app.get('/user', authenticateJWT, (req, res) => {
         });
       }
     })
-    .catch(err => {
+    .catch(() => {
         res.status(500).send('Something broke!');
       }
     )
@@ -158,7 +159,7 @@ app.post('/addTodo', authenticateJWT, (req, res) => {
         key,
       });
     })
-    .catch(err => {
+    .catch(() => {
       res.status(500).send('Something broke!');
     })
 });
@@ -170,7 +171,7 @@ app.delete('/deleteTodo', authenticateJWT, (req, res) => {
     .remove()
     .then(() => {
       res.status(200).json({});    })
-    .catch(err => {
+    .catch(() => {
       res.status(500).send('Something broke!');
     })
 });
@@ -182,7 +183,7 @@ app.put('/editTodo', authenticateJWT, (req, res) => {
     .set(newValue)
     .then(() => {
       res.status(200).json({});})
-    .catch(err => {
+    .catch(() => {
       res.status(500).send('Something broke!');
     })
 });
@@ -197,7 +198,7 @@ app.use(function (req, res, next) {
 
 
 
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
