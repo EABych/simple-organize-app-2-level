@@ -25,11 +25,10 @@ const app = express();
 app.use(express.static('./dist/simple-organize-app'));
 
 
-app.get('/*', function (req, res) {
+app.get('/', function (req, res) {
   res.sendFile('index.html', { root: './dist/simple-organize-app' }
   );
 });
-
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(cors({origin: true}));
@@ -58,134 +57,134 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
-// user
-app.post('/login', cors(), function (req, res) {
-  const {login, password} = req.body;
-
-  db.ref(`users/${login}`).once('value')
-    .then(resp => {
-      if (resp.val()) {
-        const data = Object.values(resp.val())[0];
-        const id = Object.keys(resp.val())[0];
-        if (data.password === password) {
-          const accessToken = jwt.sign({username: login,}, accessTokenSecret);
-
-          res.status(200).json({
-            id,
-            login,
-            email: data.email,
-            tasksList: data.tasksList,
-            accessToken,
-          });
-        } else {
-          res.status(500).send('Password doesn`t correct!');
-        }
-      } else {
-        res.status(500).send('User doesn`t exist!');
-      }
-    })
-    .catch(err => {
-        res.status(500).send('Something broke!');
-      }
-    )
-});
-
-app.post('/registration', cors(), function (req, res) {
-  const {login, password, email,} = req.body;
-  const tasksList = {test:'test'}
-  db.ref(`users/${login}`).once('value')
-    .then(resp => {
-      if (resp.val()) {
-        res.status(500).send('User already exist!');
-      } else {
-        db.ref(`users/${login}`)
-          .push({password, email, tasksList})
-          .once('value')
-          .then((() => {
-            const accessToken = jwt.sign({username: login,}, accessTokenSecret);
-
-            db.ref(`users/${login}`).once('value').then((resp => {
-              const data = Object.values(resp.val())[0];
-              const id = Object.keys(resp.val())[0];
-
-              res.status(200).json({
-                id,
-                login,
-                email: data.email,
-                tasksList: data.tasksList,
-                accessToken,
-              });
-            }))
-          }))
-          .catch(err => {
-              res.status(500).send('Something broke!');
-            }
-          )
-      }
-    })
-});
-
-app.get('/user', authenticateJWT, (req, res) => {
-  db.ref(`users/${req.user.username}`).once('value')
-    .then(resp => {
-      if (resp.val()) {
-        const data = Object.values(resp.val())[0];
-        const id = Object.keys(resp.val())[0];
-        res.status(200).json({
-          id,
-          login: req.user.username,
-          email: data.email,
-          tasksList: data.tasksList,
-        });
-      }
-    })
-    .catch(err => {
-        res.status(500).send('Something broke!');
-      }
-    )
-});
-
-
-// notes
-app.post('/addTodo', authenticateJWT, (req, res) => {
-  const {text, date, userId, userName,} = req.body;
-
-  db.ref(`users/${userName}/${userId}/tasksList/${date}`)
-    .push(text)
-    .then((snap) => {
-      const key = snap.key
-      res.status(200).json({
-        key,
-      });
-    })
-    .catch(err => {
-      res.status(500).send('Something broke!');
-    })
-});
-
-app.delete('/deleteTodo', authenticateJWT, (req, res) => {
-  const {date, id,  userId, userName} = url.parse(req.url, true).query;
-
-  db.ref(`users/${userName}/${userId}/tasksList/${date}/${id}`)
-    .remove()
-    .then(() => {
-      res.status(200).json({});    })
-    .catch(err => {
-      res.status(500).send('Something broke!');
-    })
-});
-
-app.put('/editTodo', authenticateJWT, (req, res) => {
-  const {newValue, date, id,  userId, userName} = req.body;
-
-  db.ref(`users/${userName}/${userId}/tasksList/${date}/${id}`)
-    .set(newValue)
-    .then(() => {
-      res.status(200).json({});})
-    .catch(err => {
-      res.status(500).send('Something broke!');
-    })
-});
+// // user
+// app.post('/login', cors(), function (req, res) {
+//   const {login, password} = req.body;
+//
+//   db.ref(`users/${login}`).once('value')
+//     .then(resp => {
+//       if (resp.val()) {
+//         const data = Object.values(resp.val())[0];
+//         const id = Object.keys(resp.val())[0];
+//         if (data.password === password) {
+//           const accessToken = jwt.sign({username: login,}, accessTokenSecret);
+//
+//           res.status(200).json({
+//             id,
+//             login,
+//             email: data.email,
+//             tasksList: data.tasksList,
+//             accessToken,
+//           });
+//         } else {
+//           res.status(500).send('Password doesn`t correct!');
+//         }
+//       } else {
+//         res.status(500).send('User doesn`t exist!');
+//       }
+//     })
+//     .catch(err => {
+//         res.status(500).send('Something broke!');
+//       }
+//     )
+// });
+//
+// app.post('/registration', cors(), function (req, res) {
+//   const {login, password, email,} = req.body;
+//   const tasksList = {test:'test'}
+//   db.ref(`users/${login}`).once('value')
+//     .then(resp => {
+//       if (resp.val()) {
+//         res.status(500).send('User already exist!');
+//       } else {
+//         db.ref(`users/${login}`)
+//           .push({password, email, tasksList})
+//           .once('value')
+//           .then((() => {
+//             const accessToken = jwt.sign({username: login,}, accessTokenSecret);
+//
+//             db.ref(`users/${login}`).once('value').then((resp => {
+//               const data = Object.values(resp.val())[0];
+//               const id = Object.keys(resp.val())[0];
+//
+//               res.status(200).json({
+//                 id,
+//                 login,
+//                 email: data.email,
+//                 tasksList: data.tasksList,
+//                 accessToken,
+//               });
+//             }))
+//           }))
+//           .catch(err => {
+//               res.status(500).send('Something broke!');
+//             }
+//           )
+//       }
+//     })
+// });
+//
+// app.get('/user', authenticateJWT, (req, res) => {
+//   db.ref(`users/${req.user.username}`).once('value')
+//     .then(resp => {
+//       if (resp.val()) {
+//         const data = Object.values(resp.val())[0];
+//         const id = Object.keys(resp.val())[0];
+//         res.status(200).json({
+//           id,
+//           login: req.user.username,
+//           email: data.email,
+//           tasksList: data.tasksList,
+//         });
+//       }
+//     })
+//     .catch(err => {
+//         res.status(500).send('Something broke!');
+//       }
+//     )
+// });
+//
+//
+// // notes
+// app.post('/addTodo', authenticateJWT, (req, res) => {
+//   const {text, date, userId, userName,} = req.body;
+//
+//   db.ref(`users/${userName}/${userId}/tasksList/${date}`)
+//     .push(text)
+//     .then((snap) => {
+//       const key = snap.key
+//       res.status(200).json({
+//         key,
+//       });
+//     })
+//     .catch(err => {
+//       res.status(500).send('Something broke!');
+//     })
+// });
+//
+// app.delete('/deleteTodo', authenticateJWT, (req, res) => {
+//   const {date, id,  userId, userName} = url.parse(req.url, true).query;
+//
+//   db.ref(`users/${userName}/${userId}/tasksList/${date}/${id}`)
+//     .remove()
+//     .then(() => {
+//       res.status(200).json({});    })
+//     .catch(err => {
+//       res.status(500).send('Something broke!');
+//     })
+// });
+//
+// app.put('/editTodo', authenticateJWT, (req, res) => {
+//   const {newValue, date, id,  userId, userName} = req.body;
+//
+//   db.ref(`users/${userName}/${userId}/tasksList/${date}/${id}`)
+//     .set(newValue)
+//     .then(() => {
+//       res.status(200).json({});})
+//     .catch(err => {
+//       res.status(500).send('Something broke!');
+//     })
+// });
 
 
 
